@@ -6509,6 +6509,11 @@ class OverlayView: NSView {
             if !autoOCRMode && !autoQuickSaveMode && !autoScrollCaptureMode && !autoConfirmMode { showToolbars = true }
             overlayDelegate?.overlayViewDidFinishSelection(selectionRect)
         }
+        // Auto-redact PII after an interactive capture (skip the auto-dismiss
+        // flows below, which confirm/save synchronously before OCR can finish).
+        if !autoOCRMode && !autoQuickSaveMode && !autoScrollCaptureMode && !autoConfirmMode {
+            autoRedactOnCaptureIfEnabled()
+        }
         hoveredWindowRect = nil
         // Update cursor to match the selected tool (replaces resize cursor from dragging)
         if let win = window {
@@ -6687,6 +6692,9 @@ class OverlayView: NSView {
                 showToolbars = true
             }
             overlayDelegate?.overlayViewDidFinishSelection(selectionRect)
+        }
+        if !autoOCRMode && !autoQuickSaveMode && !autoScrollCaptureMode && !autoConfirmMode {
+            autoRedactOnCaptureIfEnabled()
         }
         hoveredWindowRect = nil
         if let win = window {

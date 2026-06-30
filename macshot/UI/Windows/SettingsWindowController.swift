@@ -81,6 +81,7 @@ class SettingsWindowController: NSWindowController, NSToolbarDelegate, NSWindowD
     private var snapGuidesCheckbox: NSButton!
     private var boundarySnapCheckbox: NSButton!
     private var captureCursorCheckbox: NSButton!
+    private var autoRedactOnCaptureCheckbox: NSButton!
     private var doubleClickToCopyCheckbox: NSButton!
     private var hideCaptureInstructionsCheckbox: NSButton!
     private var disableSelectionShadowCheckbox: NSButton!
@@ -595,6 +596,7 @@ class SettingsWindowController: NSWindowController, NSToolbarDelegate, NSWindowD
         snapGuidesCheckbox = NSButton(checkboxWithTitle: L("Show snap alignment guides"), target: self, action: #selector(snapGuidesChanged(_:)))
         boundarySnapCheckbox = NSButton(checkboxWithTitle: L("Snap selection edges to image boundaries"), target: self, action: #selector(boundarySnapChanged(_:)))
         captureCursorCheckbox = NSButton(checkboxWithTitle: L("Capture mouse cursor in screenshot"), target: self, action: #selector(captureCursorChanged(_:)))
+        autoRedactOnCaptureCheckbox = NSButton(checkboxWithTitle: L("Auto-redact sensitive data on capture"), target: self, action: #selector(autoRedactOnCaptureChanged(_:)))
         doubleClickToCopyCheckbox = NSButton(checkboxWithTitle: L("Double-click selection to copy"), target: self, action: #selector(doubleClickToCopyChanged(_:)))
         hideCaptureInstructionsCheckbox = NSButton(checkboxWithTitle: L("Hide capture instructions"), target: self, action: #selector(hideCaptureInstructionsChanged(_:)))
         disableSelectionShadowCheckbox = NSButton(checkboxWithTitle: L("Disable shadow outside selection"), target: self, action: #selector(disableSelectionShadowChanged(_:)))
@@ -670,6 +672,9 @@ class SettingsWindowController: NSWindowController, NSToolbarDelegate, NSWindowD
         stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
 
         stack.addArrangedSubview(indented(captureCursorCheckbox))
+        stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
+
+        stack.addArrangedSubview(indented(autoRedactOnCaptureCheckbox))
         stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
 
         stack.addArrangedSubview(indented(doubleClickToCopyCheckbox))
@@ -2254,6 +2259,7 @@ class SettingsWindowController: NSWindowController, NSToolbarDelegate, NSWindowD
         showToolShortcutsInTooltipsCheckbox.state = UserDefaults.standard.bool(forKey: "showToolShortcutsInTooltips") ? .on : .off
 
         captureCursorCheckbox.state = UserDefaults.standard.bool(forKey: "captureCursor") ? .on : .off
+        autoRedactOnCaptureCheckbox.state = UserDefaults.standard.bool(forKey: "autoRedactOnCapture") ? .on : .off
         doubleClickToCopyCheckbox.state = (UserDefaults.standard.object(forKey: "doubleClickToCopy") as? Bool ?? true) ? .on : .off
         hideCaptureInstructionsCheckbox.state = UserDefaults.standard.bool(forKey: "hideCaptureInstructions") ? .on : .off
         disableSelectionShadowCheckbox.state = UserDefaults.standard.bool(forKey: "disableSelectionOutsideShadow") ? .on : .off
@@ -2698,6 +2704,9 @@ class SettingsWindowController: NSWindowController, NSToolbarDelegate, NSWindowD
     }
     @objc private func captureCursorChanged(_ sender: NSButton) {
         UserDefaults.standard.set(sender.state == .on, forKey: "captureCursor")
+    }
+    @objc private func autoRedactOnCaptureChanged(_ sender: NSButton) {
+        UserDefaults.standard.set(sender.state == .on, forKey: "autoRedactOnCapture")
     }
     @objc private func doubleClickToCopyChanged(_ sender: NSButton) {
         UserDefaults.standard.set(sender.state == .on, forKey: "doubleClickToCopy")

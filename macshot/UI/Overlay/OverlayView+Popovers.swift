@@ -499,6 +499,19 @@ extension OverlayView {
         }
     }
 
+    /// Auto-redact PII right after a fresh capture selection is committed, if the
+    /// "Auto-redact sensitive data on capture" preference is enabled. Reuses
+    /// `performAutoRedact()` so it honors the user's current censor tool/mode and
+    /// behaves identically to the manual right-click "Redact PII" action. OCR runs
+    /// on a background thread; annotations are appended to the undo stack when done.
+    func autoRedactOnCaptureIfEnabled() {
+        guard UserDefaults.standard.bool(forKey: "autoRedactOnCapture"),
+              !isEditorMode,
+              state == .selected,
+              screenshotImage != nil else { return }
+        performAutoRedact()
+    }
+
     func performRedactAllText() {
         guard state == .selected, let screenshot = screenshotImage else { return }
         let tool: AnnotationTool = currentTool == .pixelate ? .pixelate : .rectangle
