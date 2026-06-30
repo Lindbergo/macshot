@@ -508,8 +508,21 @@ extension OverlayView {
         guard UserDefaults.standard.bool(forKey: "autoRedactOnCapture"),
               !isEditorMode,
               state == .selected,
-              screenshotImage != nil else { return }
-        performAutoRedact()
+              let screenshot = screenshotImage else { return }
+        // Auto-redact on capture always blurs (independent of the active tool/color),
+        // so sensitive data is obscured as a blur rather than a solid colored fill.
+        AutoRedactor.redactPII(
+            screenshot: screenshot, selectionRect: selectionRect, captureDrawRect: captureDrawRect,
+            redactTool: .blur, color: currentColor, sourceImage: screenshot,
+            sourceImageBounds: captureDrawRect
+        ) { [weak self] anns in
+            guard let self = self, !anns.isEmpty else { return }
+            self.annotations.append(contentsOf: anns)
+            self.undoStack.append(contentsOf: anns.map { .added($0) })
+            self.redoStack.removeAll()
+            self.cachedCompositedImage = nil
+            self.needsDisplay = true
+        }
     }
 
     func performRedactAllText() {
