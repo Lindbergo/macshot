@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/sw33tLie/macshot/releases/latest">Download</a> · <a href="https://github.com/sw33tLie/macshot/blob/main/CHANGELOG.md">Changelog</a> · <a href="https://github.com/sw33tLie/macshot/blob/main/PRIVACY.md">Privacy</a>
+  <a href="https://github.com/Lindbergo/macshot/releases/latest">Download (this fork)</a> · <a href="https://github.com/Lindbergo/macshot/blob/main/CHANGELOG.md">Changelog</a> · <a href="https://github.com/Lindbergo/macshot/blob/main/PRIVACY.md">Privacy</a>
 </p>
 
 <p align="center">
@@ -43,12 +43,18 @@
 
 ## Install
 
-**Homebrew:**
+**This fork** is distributed as an **unsigned** build. Download the latest
+`macshot-fork.zip` from [this fork's Releases](https://github.com/Lindbergo/macshot/releases/latest),
+unzip it, and move `macshot (fork).app` to `/Applications`. Because it isn't
+notarized, the first launch needs a one-time Gatekeeper bypass:
+
 ```bash
-brew install --cask macshot
+xattr -dr com.apple.quarantine "/Applications/macshot (fork).app"
 ```
 
-**Manual:** Download the latest `.dmg` from [Releases](https://github.com/sw33tLie/macshot/releases), open it, drag to `/Applications`.
+> Prefer the official, signed, notarized app? Install it from upstream:
+> `brew install --cask macshot`, or grab the `.dmg` from
+> [sw33tLie/macshot Releases](https://github.com/sw33tLie/macshot/releases).
 
 ---
 
