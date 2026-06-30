@@ -1,0 +1,62 @@
+name: Local (unsigned) build
+
+# Builds an ad-hoc-signed macshot.app you can download and run locally.
+# No Apple Developer secrets needed. Trigger manually from the Actions tab.
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Select newest Xcode
+        run: |
+          XC=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XC" ]; then XC=$(ls -d /Applications/Xcode*.app | sort -V | tail -1); fi
+          echo "Using $XC"
+          sudo xcode-select -s "$XC/Contents/Developer"
+          xcodebuild -version
+
+      - name: Build (ad-hoc signed, no provisioning)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project macshot.xcodeproj \
+            -scheme macshot \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=YES \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            DEVELOPMENT_TEAM="" \
+            build 2>&1 | xcpretty || xcodebuild \
+            -project macshot.xcodeproj \
+            -scheme macshot \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=YES \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Locate and zip the app
+        run: |
+          APP=$(find build/Build/Products -maxdepth 2 -name "*.app" -type d | head -1)
+          echo "Found app: $APP"
+          ditto -c -k --keepParent "$APP" macshot-unsigned.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macshot-unsigned
+          path: macshot-unsigned.zip
+          if-no-files-found: error
