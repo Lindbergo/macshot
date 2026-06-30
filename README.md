@@ -1,5 +1,10 @@
 # macshot
 
+> **Fork notice.** This is a modified fork of [sw33tLie/macshot](https://github.com/sw33tLie/macshot),
+> distributed under the GPLv3. Modified by @Lindbergo (lukas@evity.hr), starting 2026-06-30 —
+> added an "Auto-redact sensitive data on capture" preference. See [FORK-CHANGES.md](FORK-CHANGES.md).
+> The original copyright and [LICENSE](LICENSE) are retained.
+
 <p align="center">
   <img src="assets/logo.svg" alt="macshot logo" width="200"/>
 </p>
