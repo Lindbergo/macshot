@@ -24,5 +24,15 @@ Files changed:
 - `macshot/UI/Overlay/OverlayView+Popovers.swift` — `autoRedactOnCaptureIfEnabled()`
 - `macshot/UI/Overlay/OverlayView.swift` — trigger on selection commit
 
+The on-capture redaction always blurs the detected regions (independent of the
+active annotation tool/color), so sensitive data is obscured as a blur rather
+than a solid colored fill.
+
 Also added `.github/workflows/local-build.yml`, an unsigned CI build workflow
 for producing a locally-runnable `.app` from this fork.
+
+## Corresponding source (GPLv3 §6)
+
+This repository is the complete corresponding source for any binary built from
+it. Anyone given a binary built from this fork may obtain the matching source
+here: <https://github.com/Lindbergo/macshot>.
